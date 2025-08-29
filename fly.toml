@@ -1,0 +1,35 @@
+# fly.toml generado para insano-shop
+app = "insano-shop"
+primary_region = "mia" # cambia a tu región preferida (por ej. iad, mia, scl, gru, gig, etc.)
+kill_signal = "SIGINT"
+kill_timeout = "5s"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "9000"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 9000
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 200
+    soft_limit = 150
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "10s"
+    restart_limit = 0
